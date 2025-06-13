@@ -1,21 +1,15 @@
 package com.salesflow.domain.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class User {
+    private final Long id;
+    private final String usuario;
+    private final String senhaHash;
+    private final Papel papel;
 
-    private Long id;
-    private String usuario;
-    private String senha;
-    private Papel papel;
-
-    public User(Long id, String usuario, String senha, Papel papel) {
-        this.id = id;
-        this.usuario = usuario;
-        this.senha = senha;
-        this.papel = papel;
+    public User(Long id, String username, String senhaHash, Papel papel) {
+        this.id = id; this.usuario = username; this.senhaHash = senhaHash; this.papel = papel;
     }
 }

@@ -26,25 +26,25 @@ public class PedidoEntity {
     private PedidoStatus status;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date data = new Date();
+    private Date dataCriacao = new Date();
 
     @Column(nullable = false)
     private Double precoTotal;
 
     public PedidoEntity() {}
 
-    public PedidoEntity(Long id, UserEntity client, PedidoStatus status, Date data, Double precoTotal) {
+    public PedidoEntity(Long id, UserEntity client, PedidoStatus status, Date dataCriacao, Double precoTotal) {
         this.id = id;
         this.client = client;
         this.status = status;
-        this.data = data;
+        this.dataCriacao = dataCriacao;
         this.precoTotal = precoTotal;
     }
 
-    public PedidoEntity(Long id, PedidoStatus status, Date data, Double precoTotal) {
+    public PedidoEntity(Long id, PedidoStatus status, Date dataCriacao, Double precoTotal) {
         this.id = id;
         this.status = status;
-        this.data = data;
+        this.dataCriacao = dataCriacao;
         this.precoTotal = precoTotal;
     }
 }

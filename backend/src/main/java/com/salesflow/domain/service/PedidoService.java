@@ -14,7 +14,7 @@ public class PedidoService {
     }
 
     public void salvarPedido(Pedido pedido) {
-        repository.save(pedido);
+        repository.salvar(pedido);
     }
 
     public List<Pedido> getAllPedidos() {
