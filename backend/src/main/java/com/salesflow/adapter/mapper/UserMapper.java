@@ -3,13 +3,21 @@ package com.salesflow.adapter.mapper;
 import com.salesflow.adapter.repository.entity.UserEntity;
 import com.salesflow.domain.model.User;
 
-public class UserMapper {
+public final class UserMapper {
 
-    public static User toDomain(UserEntity entity) {
-        return new User(entity.getId(), entity.getUsuario(), entity.getSenha(), entity.getPapel());
+    private UserMapper() {}
+
+    public static User toDomain(UserEntity e) {
+        if (e == null)
+            return null;
+
+        return new User(e.getId(), e.getUsuario(), e.getSenhaHash(), e.getPapel());
     }
 
-    public static UserEntity toEntity(User domain) {
-        return new UserEntity(domain.getId(), domain.getUsuario(), domain.getSenha(), domain.getPapel());
+    public static UserEntity toEntity(User d) {
+        if (d == null)
+            return null;
+
+        return new UserEntity(d.getId(), d.getUsuario(), d.getSenhaHash(), d.getPapel());
     }
 }

@@ -1,7 +1,6 @@
 package com.salesflow.adapter.controller;
 
 import com.salesflow.domain.model.User;
-import com.salesflow.domain.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

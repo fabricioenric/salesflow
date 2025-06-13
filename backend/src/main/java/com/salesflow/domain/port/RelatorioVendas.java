@@ -8,5 +8,5 @@ import java.util.List;
 public interface RelatorioVendas {
 
     Resumo carregarResumo();
-    List<ClienteAtivo> clientesMaisAtivos(int limit);
+    List<ClienteAtivo> clientesMaisAtivos(int limite);
 }

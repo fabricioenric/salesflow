@@ -1,8 +1,5 @@
 package com.salesflow.adapter.dto;
 
-import lombok.Getter;
-
-@Getter
 public class Resumo {
 
     private final long totalPedidos;
@@ -13,5 +10,17 @@ public class Resumo {
         this.totalPedidos  = totalOrders;
         this.receitaTotal = totalRevenue;
         this.pedidosPendentes = pendingOrders;
+    }
+
+    public long getTotalPedidos() {
+        return totalPedidos;
+    }
+
+    public double getReceitaTotal() {
+        return receitaTotal;
+    }
+
+    public long getPedidosPendentes() {
+        return pedidosPendentes;
     }
 }

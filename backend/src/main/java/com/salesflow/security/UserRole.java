@@ -23,7 +23,7 @@ public class UserRole implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getSenha();
+        return user.getSenhaHash();
     }
 
     @Override
