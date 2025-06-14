@@ -11,6 +11,15 @@ public class User {
     private String usuario;
     private String senhaHash;
     private Papel papel;
+    private Boolean ativo;
+
+    public User(Long id, String usuario, String senhaHash, Papel papel, Boolean ativo) {
+        this.id = id;
+        this.usuario = usuario;
+        this.senhaHash = senhaHash;
+        this.papel = papel;
+        this.ativo = ativo;
+    }
 
     public User(Long id, String usuario, String senhaHash, Papel papel) {
         validar(usuario, senhaHash, papel);
@@ -72,14 +81,18 @@ public class User {
         return papel;
     }
 
+    public Boolean isAtivo() {
+        return ativo;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof User user)) return false;
-        return Objects.equals(getId(), user.getId()) && Objects.equals(getUsuario(), user.getUsuario()) && Objects.equals(getSenhaHash(), user.getSenhaHash()) && getPapel() == user.getPapel();
+        return Objects.equals(getId(), user.getId()) && Objects.equals(getUsuario(), user.getUsuario()) && Objects.equals(getSenhaHash(), user.getSenhaHash()) && getPapel() == user.getPapel() && Objects.equals(ativo, user.ativo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getUsuario(), getSenhaHash(), getPapel());
+        return Objects.hash(getId(), getUsuario(), getSenhaHash(), getPapel(), ativo);
     }
 }

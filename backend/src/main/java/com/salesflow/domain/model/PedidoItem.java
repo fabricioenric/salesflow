@@ -1,7 +1,5 @@
 package com.salesflow.domain.model;
 
-import lombok.Getter;
-
 import java.util.Objects;
 
 public class PedidoItem {

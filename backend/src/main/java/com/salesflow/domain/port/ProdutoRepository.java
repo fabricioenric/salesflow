@@ -9,4 +9,5 @@ public interface ProdutoRepository {
     Produto findById(Long id);
     List<Produto> findAll();
     void salvar(Produto p);
+    void deletar(Long id);
 }

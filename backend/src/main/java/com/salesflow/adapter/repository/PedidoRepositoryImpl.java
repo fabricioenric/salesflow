@@ -25,12 +25,17 @@ public class PedidoRepositoryImpl implements PedidoRepository {
 
     @Override
     public Pedido findById(Long id) {
-        return null;
+        return PedidoMapper.toDomain(jpaRepository.findById(id).orElse(null));
     }
 
     @Override
     public List<Pedido> findByStatus(PedidoStatus status) {
-        return List.of();
+        return jpaRepository.findAllByStatus(status).stream().map(PedidoMapper::toDomain).toList();
+    }
+
+    @Override
+    public List<Pedido> findByCliente(String usuario) {
+        return jpaRepository.findAllByCliente(usuario).stream().map(PedidoMapper::toDomain).toList();
     }
 
     @Override

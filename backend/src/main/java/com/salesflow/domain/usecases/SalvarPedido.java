@@ -1,6 +1,6 @@
 package com.salesflow.domain.usecases;
 
-import com.salesflow.adapter.dto.ItemRequest;
+import com.salesflow.adapter.dto.Item;
 import com.salesflow.domain.model.*;
 import com.salesflow.domain.port.PedidoRepository;
 import com.salesflow.domain.port.ProdutoRepository;
@@ -20,14 +20,14 @@ public class SalvarPedido {
         this.pedidoRepository = pedidoRepository;
     }
 
-    public Pedido execute(String usuario, List<ItemRequest> itens) {
+    public Pedido execute(String usuario, List<Item> itens) {
 
         User cliente = userRepository.findByUsuario(usuario);
 
         List<PedidoItem> pedidoItens = itens.stream()
                 .map(r -> {
-                    Produto p = produtoRepository.findById(r.getId());
-                    p.diminunirEstoque(r.getQuantidade());
+                    Produto p = produtoRepository.findById(r.getProdutoId());
+                    p.diminuirEstoque(r.getQuantidade());
                     produtoRepository.salvar(p);
 
                     return new PedidoItem(p, r.getQuantidade(), p.getPreco());

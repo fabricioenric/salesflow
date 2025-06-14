@@ -9,6 +9,7 @@ public interface PedidoRepository {
 
     Pedido findById(Long id);
     List<Pedido> findByStatus(PedidoStatus status);
+    List<Pedido> findByCliente(String usuario);
     List<Pedido> findAll();
     void salvar(Pedido pedido);
 }

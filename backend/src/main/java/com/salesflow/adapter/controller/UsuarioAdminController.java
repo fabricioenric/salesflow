@@ -4,12 +4,12 @@ import com.salesflow.domain.model.User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/flow/users")
-public class UserController {
+@RequestMapping("/flow/usuarios")
+public class UsuarioAdminController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public UsuarioAdminController(UserService userService) {
         this.userService = userService;
     }
 

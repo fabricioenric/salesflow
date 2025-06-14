@@ -11,13 +11,13 @@ public final class UserMapper {
         if (e == null)
             return null;
 
-        return new User(e.getId(), e.getUsuario(), e.getSenhaHash(), e.getPapel());
+        return new User(e.getId(), e.getUsuario(), e.getSenhaHash(), e.getPapel(), e.isAtivo());
     }
 
     public static UserEntity toEntity(User d) {
         if (d == null)
             return null;
 
-        return new UserEntity(d.getId(), d.getUsuario(), d.getSenhaHash(), d.getPapel());
+        return new UserEntity(d.getId(), d.getUsuario(), d.getSenhaHash(), d.getPapel(), d.isAtivo());
     }
 }

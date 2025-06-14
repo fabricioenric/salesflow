@@ -26,7 +26,18 @@ public class UserEntity {
     @Column(nullable = false, length = 20)
     private Papel papel;
 
-    protected UserEntity() {}
+    @Column(nullable = false)
+    private Boolean ativo;
+
+    public UserEntity() {}
+
+    public UserEntity(Long id, String usuario, String senhaHash, Papel papel, Boolean ativo) {
+        this.id = id;
+        this.usuario = usuario;
+        this.senhaHash = senhaHash;
+        this.papel = papel;
+        this.ativo = ativo;
+    }
 
     public UserEntity(String usuario, String senhaHash, Papel papel) {
         this.usuario = usuario;
@@ -73,14 +84,22 @@ public class UserEntity {
         this.papel = papel;
     }
 
+    public Boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof UserEntity that)) return false;
-        return Objects.equals(getId(), that.getId()) && Objects.equals(getUsuario(), that.getUsuario()) && Objects.equals(getSenhaHash(), that.getSenhaHash()) && getPapel() == that.getPapel();
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getUsuario(), that.getUsuario()) && Objects.equals(getSenhaHash(), that.getSenhaHash()) && getPapel() == that.getPapel() && Objects.equals(isAtivo(), that.isAtivo());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getUsuario(), getSenhaHash(), getPapel());
+        return Objects.hash(getId(), getUsuario(), getSenhaHash(), getPapel(), isAtivo());
     }
 }
