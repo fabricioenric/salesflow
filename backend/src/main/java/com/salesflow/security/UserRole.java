@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public class UserRole implements UserDetails {
 
@@ -38,7 +39,7 @@ public class UserRole implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return user.isAtivo();
     }
 
     @Override
@@ -48,10 +49,22 @@ public class UserRole implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.isAtivo();
     }
 
     public User getUser() {
         return user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserRole that)) return false;
+        return Objects.equals(user, that.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(user);
     }
 }

@@ -1,9 +1,10 @@
 package com.salesflow.adapter.dto;
 
 public class TokenResponse {
-    private String accessToken;
-    private String refreshToken;
-    private String role;
+
+    private final String accessToken;
+    private final String refreshToken;
+    private final String role;
 
     public TokenResponse(String accessToken, String refreshToken, String role) {
         this.accessToken = accessToken;

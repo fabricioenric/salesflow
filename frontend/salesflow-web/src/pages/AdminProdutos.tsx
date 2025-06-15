@@ -7,6 +7,7 @@ import {
   Produto
 } from "../api/products";
 import Modal from "../components/Modal/Modal";
+import { toast } from "react-toastify";
 
 type Draft = Partial<Produto & { estoqueInicial: number }>;
 
@@ -23,6 +24,8 @@ export default function AdminProdutos() {
 
   if (isLoading) return <p style={{ padding: "1rem" }}>Carregando produtos…</p>;
   if (isError) return <p style={{ padding: "1rem", color: "red" }}>Erro ao carregar produtos.</p>;
+
+  const validar = () => draft.nome && draft.preco! > 0;
 
   return (
     <>
@@ -58,13 +61,37 @@ export default function AdminProdutos() {
                 <td>R$ {p.preco.toFixed(2)}</td>
                 <td>{p.estoque}</td>
                 <td>
-                  <button className="btn" onClick={() => { setDraft(p); setOpen(true); }}>
+                  <button
+                    className="btn"
+                    onClick={() => {
+                      setDraft(p);
+                      setOpen(true);
+                    }}
+                  >
                     Editar
                   </button>{" "}
-                  <button className="btn-danger" onClick={() => excluir.mutate(p.id)}>
+                  <button
+                    className="btn-danger"
+                    onClick={() => {
+                      if (confirm(`Excluir produto "${p.nome}"?`)) {
+                        excluir.mutate(p.id, {
+                          onSuccess: () => toast.success("Produto excluído"),
+                          onError: () => toast.error("Erro ao excluir produto")
+                        });
+                      }
+                    }}
+                  >
                     Excluir
                   </button>{" "}
-                  <button className="btn" onClick={() => ajustar.mutate({ id: p.id, qtd: 1 })}>
+                  <button
+                    className="btn"
+                    onClick={() =>
+                      ajustar.mutate({ id: p.id, qtd: 1 }, {
+                        onSuccess: () => toast.success("+1 adicionado ao estoque"),
+                        onError: () => toast.error("Erro ao ajustar estoque")
+                      })
+                    }
+                  >
                     +1 estoque
                   </button>
                 </td>
@@ -79,7 +106,17 @@ export default function AdminProdutos() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            salvar.mutate(draft, { onSuccess: () => setOpen(false) });
+            if (!validar()) {
+              toast.warn("Preencha nome e preço válido");
+              return;
+            }
+            salvar.mutate(draft, {
+              onSuccess: () => {
+                toast.success("Produto salvo com sucesso!");
+                setOpen(false);
+              },
+              onError: () => toast.error("Erro ao salvar produto")
+            });
           }}
           style={{ display: "grid", gap: "0.75rem", marginTop: "1rem" }}
         >
@@ -105,7 +142,7 @@ export default function AdminProdutos() {
               onChange={(e) => setDraft((d) => ({ ...d, estoqueInicial: +e.target.value }))}
             />
           )}
-          <button className="btn" disabled={salvar.isPending}>
+          <button className="btn" disabled={salvar.isPending || !validar()}>
             {salvar.isPending ? "Salvando…" : "Salvar"}
           </button>
         </form>

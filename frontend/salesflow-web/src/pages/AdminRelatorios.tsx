@@ -15,6 +15,12 @@ import {
   Bar
 } from "recharts";
 
+interface Cliente {
+  usuario: string;
+  numeroPedidos: number;
+  receita: number;
+}
+
 export default function AdminRelatorios() {
   const { data: resumo } = useResumo();
   const { data: serie } = useSerie();
@@ -48,50 +54,56 @@ export default function AdminRelatorios() {
       </div>
 
       {/* série temporal */}
-      <div className="card" style={{ overflowX: "auto" }}>
-        <h3>Receita (30 dias)</h3>
-        <LineChart width={800} height={250} data={serie}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="dia" />
-          <YAxis />
-          <Tooltip />
-          <Line type="monotone" dataKey="receita" stroke="#8884d8" />
-        </LineChart>
-      </div>
+      {serie?.length && (
+        <div className="card" style={{ overflowX: "auto" }}>
+          <h3>Receita (30 dias)</h3>
+          <LineChart width={800} height={250} data={serie}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="dia" />
+            <YAxis />
+            <Tooltip />
+            <Line type="monotone" dataKey="receita" stroke="#8884d8" />
+          </LineChart>
+        </div>
+      )}
 
       {/* ranking produtos */}
-      <div className="card" style={{ overflowX: "auto" }}>
-        <h3>Produtos mais vendidos</h3>
-        <BarChart width={800} height={250} data={rank}>
-          <XAxis dataKey="produto" />
-          <YAxis />
-          <Tooltip />
-          <Bar dataKey="unidades" fill="#82ca9d" />
-        </BarChart>
-      </div>
+      {rank?.length && (
+        <div className="card" style={{ overflowX: "auto" }}>
+          <h3>Produtos mais vendidos</h3>
+          <BarChart width={800} height={250} data={rank}>
+            <XAxis dataKey="produto" />
+            <YAxis />
+            <Tooltip />
+            <Bar dataKey="unidades" fill="#82ca9d" />
+          </BarChart>
+        </div>
+      )}
 
       {/* top clientes */}
-      <div className="card">
-        <h3>Top clientes</h3>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Cliente</th>
-              <th>Pedidos</th>
-              <th>Receita</th>
-            </tr>
-          </thead>
-          <tbody>
-            {top?.map((c: any) => (
-              <tr key={c.usuario}>
-                <td>{c.usuario}</td>
-                <td>{c.numeroPedidos}</td>
-                <td>R$ {c.receita.toFixed(2)}</td>
+      {top?.length && (
+        <div className="card">
+          <h3>Top clientes</h3>
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Pedidos</th>
+                <th>Receita</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {top.map((c: Cliente) => (
+                <tr key={c.usuario}>
+                  <td>{c.usuario}</td>
+                  <td>{c.numeroPedidos}</td>
+                  <td>R$ {c.receita.toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

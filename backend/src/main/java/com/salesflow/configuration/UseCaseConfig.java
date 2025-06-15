@@ -116,4 +116,8 @@ public class UseCaseConfig {
     ListarClienteMaisAtivos listarClienteMaisAtivos(ReportPort reportPort) {
         return new ListarClienteMaisAtivos(reportPort);
     }
+    @Bean
+    ObterResumoDashboard obterResumoDashboard(RelatorioRepository relatorioRepository) {
+        return new ObterResumoDashboard(relatorioRepository);
+    }
 }

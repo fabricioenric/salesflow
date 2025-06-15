@@ -6,6 +6,7 @@ import {
   Usuario
 } from "../api/users";
 import Modal from "../components/Modal/Modal";
+import { toast } from "react-toastify";
 
 type Draft = Partial<Usuario & { password: string }>;
 
@@ -21,6 +22,8 @@ export default function AdminUsuarios() {
 
   if (isLoading) return <p style={{ padding: "1rem" }}>Carregando usuários…</p>;
   if (isError) return <p style={{ padding: "1rem", color: "red" }}>Erro ao carregar usuários.</p>;
+
+  const validar = () => draft.username && (!draft.id ? draft.password : true);
 
   return (
     <>
@@ -57,7 +60,17 @@ export default function AdminUsuarios() {
                   <button className="btn" onClick={() => { setDraft(u); setOpen(true); }}>
                     Editar
                   </button>{" "}
-                  <button className="btn-danger" onClick={() => desativar.mutate(u.id)}>
+                  <button
+                    className="btn-danger"
+                    onClick={() => {
+                      if (confirm(`Desativar "${u.username}"?`)) {
+                        desativar.mutate(u.id, {
+                          onSuccess: () => toast.success("Usuário desativado"),
+                          onError: () => toast.error("Erro ao desativar usuário")
+                        });
+                      }
+                    }}
+                  >
                     Desativar
                   </button>
                 </td>
@@ -72,7 +85,17 @@ export default function AdminUsuarios() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            salvar.mutate(draft, { onSuccess: () => setOpen(false) });
+            if (!validar()) {
+              toast.warn("Preencha todos os campos obrigatórios");
+              return;
+            }
+            salvar.mutate(draft, {
+              onSuccess: () => {
+                toast.success("Usuário salvo com sucesso!");
+                setOpen(false);
+              },
+              onError: () => toast.error("Erro ao salvar usuário")
+            });
           }}
           style={{ display: "grid", gap: "0.75rem", marginTop: "1rem" }}
         >
@@ -100,7 +123,7 @@ export default function AdminUsuarios() {
             <option value="SELLER">SELLER</option>
             <option value="ADMIN">ADMIN</option>
           </select>
-          <button className="btn" disabled={salvar.isPending}>
+          <button className="btn" disabled={salvar.isPending || !validar()}>
             {salvar.isPending ? "Salvando…" : "Salvar"}
           </button>
         </form>
