@@ -96,4 +96,24 @@ public class UseCaseConfig {
     SeriesTemporaisVendas seriesTemporaisVendas(SeriesTemporaisVendasPort seriesTemporaisVendasPort) {
         return new SeriesTemporaisVendas(seriesTemporaisVendasPort);
     }
+    @Bean
+    AlterarProduto alterarProduto(ProdutoRepository produtoRepository) {
+        return new AlterarProduto(produtoRepository);
+    }
+    @Bean
+    CancelarPedido cancelarPedido(PedidoRepository pedidoRepository) {
+        return new CancelarPedido(pedidoRepository);
+    }
+    @Bean
+    ConcluirPedido concluirPedido(PedidoRepository pedidoRepository, NotificacaoPort notificacaoPort) {
+        return new ConcluirPedido(pedidoRepository, notificacaoPort);
+    }
+    @Bean
+    DetalharProduto detalharProduto(ProdutoRepository produtoRepository) {
+        return new DetalharProduto(produtoRepository);
+    }
+    @Bean
+    ListarClienteMaisAtivos listarClienteMaisAtivos(ReportPort reportPort) {
+        return new ListarClienteMaisAtivos(reportPort);
+    }
 }

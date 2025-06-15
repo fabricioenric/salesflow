@@ -7,7 +7,7 @@ import java.util.Objects;
  */
 public class Produto {
 
-    private final Long id;
+    private Long id;
     private String nome;
     private double  preco;
     private int estoque;
@@ -15,6 +15,13 @@ public class Produto {
     public Produto(Long id, String nome, double preco, int estoque) {
         validar(nome, preco, estoque);
         this.id      = id;
+        this.nome    = nome;
+        this.preco   = preco;
+        this.estoque = estoque;
+    }
+
+    public Produto(String nome, double preco, int estoque) {
+        validar(nome, preco, estoque);
         this.nome    = nome;
         this.preco   = preco;
         this.estoque = estoque;

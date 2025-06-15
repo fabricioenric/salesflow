@@ -14,8 +14,10 @@ public class CriarUsuario {
         this.encoder = encoder;
     }
 
-    public void execute(String usuario, String senha, Papel papel){
+    public User execute(String usuario, String senha, Papel papel){
         String hash = encoder.encode(senha);
-        userRepository.salvar(new User(null, usuario, hash, papel));
+        User u = new User(null, usuario, hash, papel);
+        userRepository.salvar(u);
+        return u;
     }
 }

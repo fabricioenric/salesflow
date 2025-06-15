@@ -1,25 +1,48 @@
 package com.salesflow.adapter.controller;
 
-import com.salesflow.domain.model.User;
+import com.salesflow.adapter.dto.NovoUsuarioDTO;
+import com.salesflow.adapter.dto.PatchUsuarioDTO;
+import com.salesflow.adapter.dto.UsuarioDTO;
+import com.salesflow.adapter.mapper.RestMapper;
+import com.salesflow.domain.model.Papel;
+import com.salesflow.domain.usecases.AtualizarUsuario;
+import com.salesflow.domain.usecases.CriarUsuario;
+import com.salesflow.domain.usecases.DesativarUsuario;
+import com.salesflow.domain.usecases.ListarUsuarios;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/flow/usuarios")
+import java.util.List;
+
+@RestController @RequestMapping("/flow/admin/usuarios")
 public class UsuarioAdminController {
 
-    private final UserService userService;
+    private final CriarUsuario criar;
+    private final ListarUsuarios listar;
+    private final AtualizarUsuario atualizar;
+    private final DesativarUsuario desativar;
 
-    public UsuarioAdminController(UserService userService) {
-        this.userService = userService;
+    public UsuarioAdminController(CriarUsuario c, ListarUsuarios l,
+                                  AtualizarUsuario a, DesativarUsuario d){
+        criar=c; listar=l; atualizar=a; desativar=d;
     }
 
-    @PostMapping("/registrar")
-    public void registrar(@RequestBody User user) {
-        userService.registrarUsuario(user);
+    @PostMapping
+    public UsuarioDTO novo(@RequestBody NovoUsuarioDTO dto){
+        var u = criar.execute(dto.getUsuario(), dto.getSenha(), Papel.valueOf(dto.getPapel()));
+        return RestMapper.toDTO(u);
     }
 
-    @GetMapping("/{usuario}")
-    public User getUser(@PathVariable String usuario) {
-        return userService.findUser(usuario);
+    @GetMapping
+    public List<UsuarioDTO> todos(){
+        return listar.execute().stream().map(RestMapper::toDTO).toList();
     }
+
+    @PutMapping("/{id}")
+    public UsuarioDTO update(@PathVariable Long id, @RequestBody PatchUsuarioDTO dto){
+        var u = atualizar.execute(id, dto.getUsuario(), dto.getPapel()==null ? null : Papel.valueOf(dto.getPapel()));
+        return RestMapper.toDTO(u);
+    }
+
+    @DeleteMapping("/{id}")
+    public void disable(@PathVariable Long id){ desativar.execute(id); }
 }
