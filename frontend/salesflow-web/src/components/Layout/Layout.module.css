@@ -1,0 +1,7 @@
+.container { display: flex; height: 100vh; }
+.sidebar   { width: 220px; background: #1f2937; color: #fff; display:flex; flex-direction:column; }
+.logo      { padding: 1rem; font-weight: 600; font-size: 1.1rem; }
+.link      { padding: .5rem 1rem; display:block; color:#fff; text-decoration:none; }
+.link:hover, .active { background:#374151; }
+.main      { flex:1; overflow-y:auto; background:var(--gray-100); }
+.logout    { margin: 1rem 1rem 0 auto; border:none; background:none; color:#fff; cursor:pointer; }
