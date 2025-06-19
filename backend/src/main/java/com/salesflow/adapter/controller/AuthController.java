@@ -5,6 +5,7 @@ import com.salesflow.adapter.dto.RefreshRequest;
 import com.salesflow.adapter.dto.TokenResponse;
 import com.salesflow.domain.usecases.AutenticarUsuario;
 import com.salesflow.domain.usecases.RenovarToken;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,7 +20,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public TokenResponse login(@RequestBody LoginRequest body){
+    public TokenResponse login(@Valid @RequestBody LoginRequest body){
         var out = authUC.execute(body.getUsuario(), body.getSenha());
         return new TokenResponse(out.getTokenAcesso(), out.getTokenRefresh(), out.getPapel());
     }

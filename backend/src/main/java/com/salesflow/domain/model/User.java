@@ -30,7 +30,6 @@ public class User {
         this.papel = papel;
     }
 
-    /** Troca de senha recebendo o HASH já gerado. */
     public void mudarSenha(String novaSenhaHash) {
         if (novaSenhaHash == null || novaSenhaHash.isBlank())
             throw new IllegalArgumentException("Hash de senha inválido");
@@ -38,7 +37,6 @@ public class User {
         this.senhaHash = novaSenhaHash;
     }
 
-    /** Alteração de perfil (ex.: admin promovendo usuário) */
     public void mudarPapel(Papel novoPapel) {
         if (novoPapel == null)
             throw new IllegalArgumentException("Perfil nulo");
@@ -46,7 +44,6 @@ public class User {
         this.papel = novoPapel;
     }
 
-    /** Alteração de usuario (opcional) */
     public void mudarUsuario(String novoUsuario) {
         if (novoUsuario == null || novoUsuario.isBlank())
             throw new IllegalArgumentException("Username vazio");

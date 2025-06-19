@@ -14,7 +14,7 @@ public class ConcluirPedido {
         var p = repo.findById(id);
         p.concluir();
         repo.salvar(p);
-        noti.notificarMudancaStatus(p.getId(), p.getCliente().getUsuario(), p.getStatus().name());
+        // noti.notificarMudancaStatus(p.getId(), p.getCliente().getUsuario(), p.getStatus().name());
         return p;
     }
 }

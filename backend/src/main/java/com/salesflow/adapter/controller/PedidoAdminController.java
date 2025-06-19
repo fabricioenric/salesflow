@@ -4,6 +4,7 @@ import com.salesflow.adapter.dto.PedidoDTO;
 import com.salesflow.adapter.mapper.RestMapper;
 import com.salesflow.domain.model.PedidoStatus;
 import com.salesflow.domain.usecases.ListarTodosPedidos;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,7 @@ public class PedidoAdminController {
 
     public PedidoAdminController(ListarTodosPedidos l){ listar=l; }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @GetMapping
     public List<PedidoDTO> todos(@RequestParam(required=false) String status){
         var st = status==null ? null : PedidoStatus.valueOf(status);

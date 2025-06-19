@@ -1,10 +1,8 @@
-# 1. build
-FROM node:20-alpine AS build
+FROM node:18-alpine AS builder
 WORKDIR /app
 COPY . .
-RUN corepack enable && pnpm i && pnpm run build
+RUN npm install && npm run build
 
-# 2. nginx
-FROM nginx:1.25-alpine
-COPY --from=build /app/dist /usr/share/nginx/html
+FROM nginx:stable-alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf

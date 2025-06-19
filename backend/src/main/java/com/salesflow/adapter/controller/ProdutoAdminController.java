@@ -8,6 +8,7 @@ import com.salesflow.adapter.mapper.RestMapper;
 import com.salesflow.domain.usecases.AjustarEstoque;
 import com.salesflow.domain.usecases.AlterarProduto;
 import com.salesflow.domain.usecases.ExcluirProduto;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,19 +23,23 @@ public class ProdutoAdminController {
         criarAlterar=a; excluir=e; estoque=s;
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
     public ProdutoDTO novo(@RequestBody NovoProdutoDTO dto){
         return RestMapper.toDTO(criarAlterar.execute(dto.getNome(), dto.getPreco(), dto.getEstoqueInicial()));
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PutMapping("/{id}")
     public ProdutoDTO patch(@PathVariable Long id, @RequestBody PatchProdutoDTO dto){
         return RestMapper.toDTO(criarAlterar.execute(id, dto.getNome(), dto.getPreco()));
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id){ excluir.execute(id); }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PatchMapping("/{id}/estoque")
     public ProdutoDTO ajuste(@PathVariable Long id, @RequestBody AjusteEstoqueDTO dto){
         return RestMapper.toDTO(estoque.adicionarEstoque(id, dto.getQuantidade()));

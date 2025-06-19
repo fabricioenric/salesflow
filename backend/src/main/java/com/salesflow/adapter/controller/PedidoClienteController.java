@@ -7,6 +7,7 @@ import com.salesflow.adapter.mapper.RestMapper;
 import com.salesflow.domain.usecases.CancelarPedido;
 import com.salesflow.domain.usecases.ListarMeusPedidos;
 import com.salesflow.domain.usecases.SalvarPedido;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ public class PedidoClienteController {
         criar=c; cancelar=k; listar=l;
     }
 
+    @PreAuthorize("hasRole('CLIENTE')")
     @PostMapping
     public PedidoDTO novo(@RequestBody CriarPedidoDTO body,
                           @AuthenticationPrincipal UserDetails ud){
@@ -33,11 +35,13 @@ public class PedidoClienteController {
         return RestMapper.toDTO(criar.execute(ud.getUsername(), itens));
     }
 
+    @PreAuthorize("hasRole('CLIENTE')")
     @GetMapping
     public List<PedidoDTO> meusPedidos(@AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails ud){
         return listar.execute(ud.getUsername()).stream().map(RestMapper::toDTO).toList();
     }
 
+    @PreAuthorize("hasRole('CLIENTE')")
     @DeleteMapping("/{id}")
     public void cancelar(@PathVariable Long id,
                          @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails ud){

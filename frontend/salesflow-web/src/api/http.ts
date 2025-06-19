@@ -26,14 +26,14 @@ http.interceptors.response.use(
     ) {
       originalRequest._retry = true;
       try {
-        await refresh(); // atualiza o token
+        await refresh();
         const newToken = useAuth.getState().tokens?.accessToken;
         if (newToken) {
           originalRequest.headers.Authorization = `Bearer ${newToken}`;
-          return http(originalRequest); // refaz a request original
+          return http(originalRequest);
         }
       } catch (refreshError) {
-        logout(); // não conseguiu renovar, desloga
+        logout();
       }
     }
     return Promise.reject(error);

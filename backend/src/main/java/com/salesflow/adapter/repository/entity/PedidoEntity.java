@@ -34,7 +34,7 @@ public class PedidoEntity {
     @Column(name = "valor_total", nullable = false)
     private Double valorTotal;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PedidoItemEntity> itens = new ArrayList<>();
 
     protected PedidoEntity() {}

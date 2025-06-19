@@ -16,9 +16,11 @@ public class UserDetailsServiceAdapter implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String usuario) throws UsernameNotFoundException {
-        return userRepository.findByUsuario(usuario)
-                .map(this::toUserDetails)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + usuario));
+        User user = userRepository.findByUsuario(usuario);
+        if (user == null) {
+            throw new UsernameNotFoundException("Usuário não encontrado: " + usuario);
+        }
+        return toUserDetails(user);
     }
 
     private UserDetails toUserDetails(User user) {

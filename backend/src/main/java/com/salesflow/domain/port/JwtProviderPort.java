@@ -5,13 +5,8 @@ package com.salesflow.domain.port;
  */
 public interface JwtProviderPort {
 
-    /** Gera access-token + refresh-token na autenticação inicial. */
     Tokens gerar(String username, String role);
 
-    /**
-     * Renova o access-token usando um refresh-token ainda válido.
-     * Lança IllegalArgumentException (ou subclasse) se o refresh estiver expirado ou inválido.
-     */
     Tokens refresh(String refreshToken);
 
     final class Tokens {

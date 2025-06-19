@@ -23,10 +23,16 @@ public class SalvarPedido {
     public Pedido execute(String usuario, List<Item> itens) {
 
         User cliente = userRepository.findByUsuario(usuario);
+        if (cliente == null) {
+            throw new IllegalArgumentException("Cliente não encontrado: " + usuario);
+        }
 
         List<PedidoItem> pedidoItens = itens.stream()
                 .map(r -> {
                     Produto p = produtoRepository.findById(r.getProdutoId());
+                    if (p == null) {
+                        throw new IllegalArgumentException("Produto com ID " + r.getProdutoId() + " não encontrado.");
+                    }
                     p.diminuirEstoque(r.getQuantidade());
                     produtoRepository.salvar(p);
 

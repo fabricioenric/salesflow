@@ -21,8 +21,12 @@ public class AutenticarUsuario {
     public Saida execute(String usuario, String senha) {
         User user = userRepository.findByUsuario(usuario);
 
+        if (user == null) {
+            throw new IllegalArgumentException("Usuário ou senha inválidos.");
+        }
+
         if(!encoder.matches(senha, user.getSenhaHash()))
-            throw new IllegalArgumentException("Senha inválida");
+            throw new IllegalArgumentException("Usuário ou senha inválidos.");
 
         JwtProviderPort.Tokens t = jwt.gerar(usuario, user.getPapel().name());
 

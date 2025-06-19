@@ -1,37 +1,66 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { http } from "../api/http";
 import { useAuth } from "../auth/useAuth";
-import "../components/ui.css";
+import { http } from "../api/http";
 
 export default function Login() {
-  const nav = useNavigate();
+  const navigate = useNavigate();
   const login = useAuth((s) => s.login);
-  const [u, setU] = useState("");
-  const [p, setP] = useState("");
-  const [err, setErr] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  async function handle() {
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+    setIsLoading(true);
+    setError("");
     try {
-      const { data } = await http.post("/auth/login", { username: u, password: p });
+      const { data } = await http.post("/flow/auth/login", { usuario: username, senha: password });
       login(data);
-      nav("/");
-    } catch {
-      setErr("Credenciais inválidas");
+      navigate("/");
+    } catch (err: any) {
+      const message = err.response?.data?.message || "Credenciais inválidas ou erro no servidor.";
+      setError(message);
+    } finally {
+      setIsLoading(false);
     }
   }
 
   return (
-    <div style={{ display: "flex", height: "100vh", alignItems: "center", justifyContent: "center", background: "var(--gray-100)" }}>
-      <div className="card" style={{ width: 320 }}>
-        <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>Entrar</h2>
-        {err && <p style={{ color: "var(--danger)" }}>{err}</p>}
-        <input className="input" placeholder="Usuário" value={u} onChange={(e) => setU(e.target.value)} />
-        <input type="password" className="input" placeholder="Senha" style={{ marginTop: 8 }} value={p} onChange={(e) => setP(e.target.value)} />
-        <button className="btn" style={{ width: "100%", marginTop: 12 }} onClick={handle}>
-          Acessar
-        </button>
-      </div>
-    </div>
+    <main className="container">
+      <article style={{ maxWidth: 420, margin: "auto" }}>
+        <hgroup>
+          <h1>SalesFlow</h1>
+          <h2>Acesse sua conta</h2>
+        </hgroup>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="username">Usuário</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Digite seu usuário"
+            required
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <label htmlFor="password">Senha</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Digite sua senha"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {error && <small style={{ color: "var(--pico-color-red-500)" }}>{error}</small>}
+          <button type="submit" aria-busy={isLoading} disabled={isLoading}>
+            {isLoading ? "Entrando..." : "Entrar"}
+          </button>
+        </form>
+      </article>
+    </main>
   );
 }

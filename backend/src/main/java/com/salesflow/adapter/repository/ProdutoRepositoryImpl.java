@@ -7,6 +7,9 @@ import com.salesflow.domain.port.ProdutoRepository;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class ProdutoRepositoryImpl implements ProdutoRepository {
 
     private final JpaProdutoRepository jpaRepository;

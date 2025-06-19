@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 import Layout from "../components/Layout/Layout";
 
@@ -11,31 +11,29 @@ import AdminProdutos from "../pages/AdminProdutos";
 import AdminUsuarios from "../pages/AdminUsuarios";
 import AdminRelatorios from "../pages/AdminRelatorios";
 
-// Protege as rotas privadas — exige login
-const Guard = () => {
-  const isAuth = useAuth((s) => s.tokens);
-  return isAuth ? (
-    <Layout>
-      <Outlet />
-    </Layout>
-  ) : (
-    <Navigate to="/login" replace />
-  );
+// Protege as rotas que exigem autenticação.
+const PrivateRoute = ({ children }: { children: JSX.Element }) => {
+  const { user } = useAuth();
+  return user ? children : <Navigate to="/login" replace />;
 };
 
-// Define todas as rotas da aplicação
 export const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
   {
-    element: <Guard />,
+    path: "/",
+    element: (
+      <PrivateRoute>
+        <Layout />
+      </PrivateRoute>
+    ),
     children: [
       { index: true, element: <Catalogo /> },
       { path: "carrinho", element: <Carrinho /> },
-      { path: "me/pedidos", element: <MeusPedidos /> },
-      { path: "seller/pendentes", element: <SellerPendentes /> },
+      { path: "meus-pedidos", element: <MeusPedidos /> },
+      { path: "pedidos-pendentes", element: <SellerPendentes /> },
       { path: "admin/produtos", element: <AdminProdutos /> },
       { path: "admin/usuarios", element: <AdminUsuarios /> },
-      { path: "admin/relatorios", element: <AdminRelatorios /> }
-    ]
-  }
+      { path: "admin/relatorios", element: <AdminRelatorios /> },
+    ],
+  },
 ]);

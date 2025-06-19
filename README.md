@@ -34,3 +34,28 @@ O projeto utiliza as seguintes tecnologias:
 ✔️ **CI/CD e Deploy Automatizado**  
 - Pipeline configurada para deploy contínuo; 
 - Publicação automática em um ambiente na nuvem.  
+
+---
+
+## ⚙️ Como Executar o Projeto
+
+Para executar o projeto localmente, é necessário ter o **Docker** e o **Docker Compose** instalados.
+
+1.  **Clone o repositório:**
+    ```bash
+    git clone https://github.com/seu-usuario/salesflow.git
+    cd salesflow
+    ```
+
+2.  **Suba os containers:**
+    Na raiz do projeto, execute o comando abaixo. Ele irá construir as imagens do backend e do frontend, e iniciar todos os serviços (incluindo o banco de dados).
+
+    ```bash
+    docker-compose up --build
+    ```
+
+3.  **Acesse a aplicação:**
+    *   **Frontend:** A aplicação estará disponível em [http://localhost:80](http://localhost:80)
+    *   **Backend (API):** A API estará disponível em [http://localhost:8080](http://localhost:8080)
+
+Para parar todos os serviços, pressione `Ctrl + C` no terminal onde o `docker-compose` está rodando, ou execute `docker-compose down` em outro terminal.

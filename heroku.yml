@@ -1,0 +1,7 @@
+build:
+  docker:
+    web: frontend/salesflow-web/Dockerfile
+    worker: backend/Dockerfile
+run:
+  web: nginx -g 'daemon off;'
+  worker: java -jar app.jar

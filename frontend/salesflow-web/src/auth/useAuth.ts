@@ -1,52 +1,47 @@
 import { create } from 'zustand';
 import { http } from '../api/http';
+import { jwtDecode } from 'jwt-decode';
 
-interface Tokens {
-  accessToken: string;
-  refreshToken: string;
+interface User {
+  sub: string; // Subject (username)
   role: string;
 }
 
 interface AuthState {
-  tokens: Tokens | null;
-  login: (tokens: Tokens) => void;
+  user: User | null;
+  accessToken: string | null;
+  login: (tokens: { accessToken: string; refreshToken: string }) => void;
   logout: () => void;
-  refresh: () => Promise<void>;
+  init: () => void;
 }
 
-function getLocalTokens(): Tokens | null {
-  try {
-    return JSON.parse(localStorage.getItem('jwt') || 'null');
-  } catch {
-    return null;
-  }
-}
-
-export const useAuth = create<AuthState>((set, get) => ({
-  tokens: getLocalTokens(),
+const useAuthStore = create<AuthState>((set) => ({
+  user: null,
+  accessToken: null,
 
   login: (tokens) => {
-    localStorage.setItem('jwt', JSON.stringify(tokens));
-    set({ tokens });
+    const decodedUser: User = jwtDecode(tokens.accessToken);
+    set({ user: decodedUser, accessToken: tokens.accessToken });
+    localStorage.setItem('jwt', tokens.accessToken);
+    localStorage.setItem('refreshToken', tokens.refreshToken);
   },
 
   logout: () => {
+    set({ user: null, accessToken: null });
     localStorage.removeItem('jwt');
-    set({ tokens: null });
+    localStorage.removeItem('refreshToken');
   },
 
-  refresh: async () => {
-    const refreshToken = get().tokens?.refreshToken;
-    if (!refreshToken) throw new Error('Refresh token ausente');
-
-    const res = await http.post('/flow/auth/refresh', { refreshToken });
-    const updated: Tokens = {
-      accessToken: res.data.accessToken,
-      refreshToken: res.data.refreshToken,
-      role: get().tokens?.role || 'CLIENTE'
-    };
-
-    localStorage.setItem('jwt', JSON.stringify(updated));
-    set({ tokens: updated });
-  }
+  init: () => {
+    const token = localStorage.getItem('jwt');
+    if (token) {
+      const decodedUser: User = jwtDecode(token);
+      set({ user: decodedUser, accessToken: token });
+    }
+  },
 }));
+
+// Initialize auth state on app startup
+useAuthStore.getState().init();
+
+export const useAuth = useAuthStore;

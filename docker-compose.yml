@@ -1,0 +1,56 @@
+services:
+  db:
+    image: postgres:12
+    container_name: salesflow-db
+    environment:
+      POSTGRES_USER: salesflow
+      POSTGRES_PASSWORD: salesflow
+      POSTGRES_DB: salesflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - salesflow-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U salesflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - salesflow-net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: salesflow-backend
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/salesflow
+      - SPRING_DATASOURCE_USERNAME=salesflow
+      - SPRING_DATASOURCE_PASSWORD=salesflow
+      - JWT_SECRET=QWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo1NDU2Nzg5MDEyMzQ1Ng==
+    networks:
+      - salesflow-net
+
+  frontend:
+    build:
+      context: ./frontend/salesflow-web
+      dockerfile: Dockerfile
+    container_name: salesflow-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - salesflow-net
+
+volumes:
+  salesflow-db-data:
+
+networks:
+  salesflow-net:
+    driver: bridge
